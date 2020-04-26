@@ -68,3 +68,39 @@ func UpdateForLock(g Goods) {
 		fmt.Println(err)
 	}
 }
+
+// UpdateForUnsigned 无符号行直接更新方案
+func UpdateForUnsigned(goods Goods) {
+	sql := "update goods_unsigned set remain_amount=remain_amount-?,remain_quantity=remain_quantity-? where envelope_no=?"
+	_, row, err := db.Execute(sql, 0.01, 1, goods.EnvelopeNo)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if row < 1 {
+		fmt.Println("扣减失败")
+	}
+}
+
+// UpdateForOptimistic 乐观锁方案
+func UpdateForOptimistic(goods Goods) {
+	sql := "update goods set remain_amount=remain_amount-?,remain_quantity=remain_quantity-? where envelope_no=? and remain_amount>=? and remain_quantity>=?"
+	_, row, err := db.Execute(sql, 0.01, 1, goods.EnvelopeNo, 0.01, 1)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if row < 1 {
+		fmt.Println("扣减失败")
+	}
+}
+
+// UpdateForOptimisticUnsigned 乐观锁+无符号方案
+func UpdateForOptimisticUnsigned(goods Goods) {
+	sql := "update goods_unsigned set remain_amount=remain_amount-?,remain_quantity=remain_quantity-? where envelope_no=? and remain_amount>=? and remain_quantity>=?"
+	_, row, err := db.Execute(sql, 0.01, 1, goods.EnvelopeNo, 0.01, 1)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if row < 1 {
+		fmt.Println("扣减失败")
+	}
+}

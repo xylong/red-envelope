@@ -8,5 +8,4 @@ require (
 	github.com/shopspring/decimal v0.0.0-20200419222939-1884f454f8ea
 	github.com/smartystreets/goconvey v1.6.4
 	github.com/tietang/dbx v1.0.1
-	golang.org/x/tools v0.0.0-20190328211700-ab21143f2384
 )
