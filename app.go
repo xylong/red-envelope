@@ -7,4 +7,5 @@ import (
 
 func init() {
 	infra.Register(&base.PropsStart{})
+	infra.Register(&base.DbxDatabaseStarter{})
 }

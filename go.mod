@@ -15,4 +15,5 @@ require (
 	github.com/tietang/props v2.2.0+incompatible
 	github.com/valyala/fasttemplate v1.1.0 // indirect
 	golang.org/x/sys v0.0.0-20200420163511-1957bb5e6d1f // indirect
+	gopkg.in/ini.v1 v1.55.0 // indirect
 )

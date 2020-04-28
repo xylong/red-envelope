@@ -12,4 +12,6 @@ func main() {
 	conf := ini.NewIniFileCompositeConfigSource(file)
 	app := infra.New(conf)
 	app.Start()
+	c := make(chan struct{})
+	<-c
 }
