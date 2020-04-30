@@ -1,7 +1,6 @@
 package base
 
 import (
-	"fmt"
 	"github.com/go-playground/locales/zh"
 	"github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -34,7 +33,7 @@ func (v *ValidatorStarter) Init(ctx infra.StarterContext) {
 	var ok bool
 	translator, ok = uni.GetTranslator("zh")
 	if ok {
-		err := zh2.RegisterDefaultTranslations(validate, trans)
+		err := zh2.RegisterDefaultTranslations(validate, translator)
 		if err != nil {
 			logrus.Error(err)
 		}

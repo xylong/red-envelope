@@ -9,4 +9,5 @@ func init() {
 	infra.Register(&base.PropsStart{})
 	infra.Register(&base.DbxDatabaseStarter{})
 	infra.Register(&base.ValidatorStarter{})
+	infra.Register(&base.IrisServerStarter{})
 }
