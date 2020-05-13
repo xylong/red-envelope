@@ -31,7 +31,6 @@ type Account struct {
 	UpdatedAt    time.Time       `db:"updated_at,omitempty"` //更新时间
 }
 
-//,omitempty
 func (po *Account) ToDTO() *services.AccountDTO {
 	dto := &services.AccountDTO{}
 	dto.AccountNo = po.AccountNo
