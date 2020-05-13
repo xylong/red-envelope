@@ -7,7 +7,7 @@ import (
 )
 
 type AccountLog struct {
-	Id              int64               `db:"id,omitempty"`         //
+	Id              int64               `db:"id,omitempty"`
 	LogNo           string              `db:"log_no,uni"`           //流水编号 全局不重复字符或数字，唯一性标识
 	TradeNo         string              `db:"trade_no"`             //交易单号 全局不重复字符或数字，唯一性标识
 	AccountNo       string              `db:"account_no"`           //账户编号 账户ID
