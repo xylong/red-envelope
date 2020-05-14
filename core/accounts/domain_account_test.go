@@ -92,7 +92,7 @@ func TestAccountDomain_Transfer(t *testing.T) {
 		// 2.余额不足，资金转出
 		convey.Convey("余额不足，资金转出", func() {
 			amount := account1.Balance
-			amount = amount.Add(decimal.NewFromFloat(200))
+			amount = amount.Add(decimal.NewFromFloat(0.01))
 			body, target := services.TradeParticipator{
 				AccountNo: account1.AccountNo,
 				UserId:    account1.UserId,
@@ -120,5 +120,33 @@ func TestAccountDomain_Transfer(t *testing.T) {
 			convey.So(account.Balance.String(), convey.ShouldEqual, account1.Balance.String())
 		})
 		// 3.充值
+		convey.Convey("充值", func() {
+			amount := decimal.NewFromFloat(6.66)
+			body, target := services.TradeParticipator{
+				AccountNo: account1.AccountNo,
+				UserId:    account1.UserId,
+				Username:  account1.Username,
+			}, services.TradeParticipator{
+				AccountNo: account2.AccountNo,
+				UserId:    account2.UserId,
+				Username:  account2.Username,
+			}
+			dto := services.AccountTransferDTO{
+				TradeBody:   body,
+				TradeTarget: target,
+				TradeNo:     ksuid.New().Next().String(),
+				Amount:      amount,
+				ChangeType:  services.AccountStoreValue,
+				ChangeFlag:  services.FlagTransferIn,
+				Decs:        "充值",
+			}
+			status, err := domain.Transfer(dto)
+			convey.So(err, convey.ShouldBeNil)
+			convey.So(status, convey.ShouldEqual, services.TransferedStatusSuccess)
+			// 实际余额更新后的预期值
+			account := domain.GetAccount(account1.AccountNo)
+			convey.So(account, convey.ShouldNotBeNil)
+			convey.So(account.Balance.String(), convey.ShouldEqual, account1.Balance.Add(amount).String())
+		})
 	})
 }

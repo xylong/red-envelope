@@ -109,7 +109,7 @@ func (d *accountDomain) Transfer(dto services.AccountTransferDTO) (status servic
 			status = services.TransferedStatusFailure
 			return err
 		}
-		if rows < 0 && dto.ChangeFlag == services.FlagTransferOut {
+		if rows <= 0 && dto.ChangeFlag == services.FlagTransferOut {
 			status = services.TransferedStatusSufficientFunds
 			return errors.New("余额不足")
 		}
