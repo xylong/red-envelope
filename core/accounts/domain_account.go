@@ -152,3 +152,60 @@ func (d *accountDomain) GetAccount(accountNo string) *services.AccountDTO {
 	}
 	return account.ToDTO()
 }
+
+// GetEnvelopeByUserId 根据用户🆔查询红包
+func (d *accountDomain) GetEnvelopeByUserId(userId string) *services.AccountDTO {
+	accountDao := AccountDao{}
+	var account *Account
+
+	err := base.Tx(func(runner *dbx.TxRunner) error {
+		accountDao.runner = runner
+		account = accountDao.GetByUserId(userId, int(services.EnvelopeAccountType))
+		return nil
+	})
+	if err != nil {
+		return nil
+	}
+	if account == nil {
+		return nil
+	}
+	return account.ToDTO()
+}
+
+// GetAccountLog 根据流水编号查账户流水
+func (d *accountDomain) GetAccountLog(logNo string) *services.AccountLogDTO {
+	dao := AccountLogDao{}
+	var log *AccountLog
+	err := base.Tx(func(runner *dbx.TxRunner) error {
+		dao.runner = runner
+		log = dao.GetOne(logNo)
+		return nil
+	})
+	if err != nil {
+		logrus.Error(err)
+		return nil
+	}
+	if log == nil {
+		return nil
+	}
+	return log.ToDTO()
+}
+
+// GetAccountLog 根据交易编号查账户流水
+func (d *accountDomain) GetAccountLogByTradeNo(tradeNo string) *services.AccountLogDTO {
+	dao := AccountLogDao{}
+	var log *AccountLog
+	err := base.Tx(func(runner *dbx.TxRunner) error {
+		dao.runner = runner
+		log = dao.GetByTradeNo(tradeNo)
+		return nil
+	})
+	if err != nil {
+		logrus.Error(err)
+		return nil
+	}
+	if log == nil {
+		return nil
+	}
+	return log.ToDTO()
+}

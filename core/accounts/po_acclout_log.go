@@ -38,3 +38,25 @@ func (po *AccountLog) FromTransferDTO(dto *services.AccountTransferDTO) {
 	po.ChangeFlag = dto.ChangeFlag
 	po.Decs = dto.Decs
 }
+
+func (po *AccountLog) ToDTO() *services.AccountLogDTO {
+	dto := &services.AccountLogDTO{
+
+		TradeNo:         po.TradeNo,
+		LogNo:           po.LogNo,
+		AccountNo:       po.AccountNo,
+		TargetAccountNo: po.TargetAccountNo,
+		UserId:          po.UserId,
+		Username:        po.Username,
+		TargetUserId:    po.TargetUserId,
+		TargetUsername:  po.TargetUsername,
+		Amount:          po.Amount,
+		Balance:         po.Balance,
+		ChangeType:      po.ChangeType,
+		ChangeFlag:      po.ChangeFlag,
+		Status:          po.Status,
+		Decs:            po.Decs,
+		CreatedAt:       po.CreatedAt,
+	}
+	return dto
+}
