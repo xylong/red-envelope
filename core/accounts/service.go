@@ -7,9 +7,19 @@ import (
 	"github.com/sirupsen/logrus"
 	"red-envelope/infra/base"
 	"red-envelope/services"
+	"sync"
 )
 
-var _ services.AccountService = new(accountService)
+var (
+	_    services.AccountService = new(accountService)
+	once sync.Once
+)
+
+func init() {
+	once.Do(func() {
+		services.IAccountService = new(accountService)
+	})
+}
 
 type accountService struct {
 }

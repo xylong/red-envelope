@@ -4,6 +4,7 @@ import (
 	"github.com/tietang/props/ini"
 	"github.com/tietang/props/kvs"
 	_ "red-envelope"
+	_ "red-envelope/apis/web"
 	"red-envelope/infra"
 )
 
