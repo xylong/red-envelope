@@ -10,6 +10,7 @@ type AccountService interface {
 	Transfer(dto AccountTransferDTO) (TransferedStatus, error)
 	StoreValue(dto AccountTransferDTO) (TransferedStatus, error)
 	GetEnvelopeAccountByUserId(userId string) *AccountDTO
+	GetAccount(accountNo string) *AccountDTO
 }
 
 // TradeParticipator 账户交易参与者
