@@ -11,6 +11,7 @@ import (
 var database *dbx.Database
 
 func DbxDatabase() *dbx.Database {
+	Check(database)
 	return database
 }
 

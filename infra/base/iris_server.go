@@ -12,6 +12,7 @@ import (
 var irisApplication *iris.Application
 
 func Iris() *iris.Application {
+	Check(irisApplication)
 	return irisApplication
 }
 
@@ -28,8 +29,11 @@ func (i *IrisServerStarter) Init(ctx infra.StarterContext) {
 }
 
 func (i *IrisServerStarter) Start(ctx infra.StarterContext) {
+	// 和logrus日志级别保持一致
+	Iris().Logger().SetLevel(ctx.Props().GetDefault("log.level", "info"))
 	// 控制台打印路由
 	routes := Iris().GetRoutes()
+	// 把路由信息打印到控制台
 	for _, route := range routes {
 		logrus.Info(route.Trace())
 	}
@@ -46,12 +50,15 @@ func initIris() *iris.Application {
 	app := iris.New()
 	app.Use(recover2.New())
 	conf := logger.Config{
-		Status: true,
-		IP:     true,
-		Method: true,
-		Path:   true,
-		Query:  true,
-		LogFunc: func(now time.Time, latency time.Duration, status, ip, method, path string, message interface{}, headerMessage interface{}) {
+		Status:             true,
+		IP:                 true,
+		Method:             true,
+		Path:               true,
+		Query:              true,
+		Columns:            true,
+		MessageContextKeys: []string{"logger_message"},
+		MessageHeaderKeys:  []string{"User-Agent"},
+		LogFunc: func(now time.Time, latency time.Duration, status, ip, method, path string, message, headerMessage interface{}) {
 			app.Logger().Infof("| %s | %s | %s | %s | %s | %s | %s | %s |",
 				now.Format("2016-01-02.15:04:05.000000"),
 				latency.String(),

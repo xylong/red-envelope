@@ -15,10 +15,12 @@ var (
 )
 
 func Validate() *validator.Validate {
+	Check(validate)
 	return validate
 }
 
 func Translate() ut.Translator {
+	Check(translator)
 	return translator
 }
 

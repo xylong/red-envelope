@@ -9,6 +9,7 @@ import (
 var props kvs.ConfigSource
 
 func Props() kvs.ConfigSource {
+	Check(props)
 	return props
 }
 
