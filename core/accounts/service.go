@@ -80,7 +80,7 @@ func (a *accountService) Transfer(dto services.AccountTransferDTO) (services.Tra
 		}
 	}
 	status, err := domain.Transfer(dto)
-	if status == services.TransferedStatusSuccess {
+	/*if status == services.TransferedStatusSuccess {
 		backwardDto := dto
 		backwardDto.TradeBody = dto.TradeTarget
 		backwardDto.TradeTarget = dto.TradeBody
@@ -88,7 +88,7 @@ func (a *accountService) Transfer(dto services.AccountTransferDTO) (services.Tra
 		backwardDto.ChangeFlag = -dto.ChangeFlag
 		status, err := domain.Transfer(backwardDto)
 		return status, err
-	}
+	}*/
 	return status, err
 }
 
