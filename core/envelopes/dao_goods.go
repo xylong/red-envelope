@@ -4,10 +4,12 @@ import (
 	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 	"github.com/tietang/dbx"
+	"red-envelope/services"
+	"time"
 )
 
 type RedEnvelopeGoodsDao struct {
-	runner dbx.TxRunner
+	runner *dbx.TxRunner
 }
 
 // Insert 写入
@@ -41,4 +43,25 @@ func (dao *RedEnvelopeGoodsDao) UpdateBalance(envelopeNo string, amount decimal.
 		return 0, err
 	}
 	return res.RowsAffected()
+}
+
+// UpdateOrderStatus 更新订单状态
+func (dao *RedEnvelopeGoodsDao) UpdateOrderStatus(envelopeNo string, status services.OrderStatus) (int64, error) {
+	sql := "update red_envelope_goods set status=? where envelope_no=?"
+	res, err := dao.runner.Exec(sql)
+	if err != nil {
+		return 0, err
+	}
+	return res.LastInsertId()
+}
+
+// FindExpired 查询过期红包
+func (dao *RedEnvelopeGoodsDao) FindExpired(offset, size int) []RedEnvelopeGoods {
+	var goods []RedEnvelopeGoods
+	sql := "select * from red_envelope_goods where remain_quantity>0 and expired_at>? and status<>4 limit ?,?"
+	err := dao.runner.Find(&goods, sql, time.Now(), offset, size)
+	if err != nil {
+		logrus.Error(err)
+	}
+	return goods
 }
