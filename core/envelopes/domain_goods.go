@@ -1,6 +1,7 @@
 package envelopes
 
 import (
+	"context"
 	"github.com/segmentio/ksuid"
 	"github.com/shopspring/decimal"
 	"github.com/tietang/dbx"
@@ -39,8 +40,8 @@ func (good *goodsDomain) Create(dto services.RedEnvelopeGoodsDTO) {
 }
 
 // Save 保存
-func (good *goodsDomain) Save() (id int64, err error) {
-	err = base.Tx(func(runner *dbx.TxRunner) error {
+func (good *goodsDomain) Save(ctx context.Context) (id int64, err error) {
+	err = base.ExecuteContext(ctx, func(runner *dbx.TxRunner) error {
 		dao := RedEnvelopeGoodsDao{runner}
 		id, err = dao.Insert(good.RedEnvelopeGoods)
 		return err
@@ -49,7 +50,7 @@ func (good *goodsDomain) Save() (id int64, err error) {
 }
 
 // CreateAndSave 创建并保存
-func (good *goodsDomain) CreateAndSave(dto services.RedEnvelopeGoodsDTO) (id int64, err error) {
+func (good *goodsDomain) CreateAndSave(ctx context.Context, dto services.RedEnvelopeGoodsDTO) (id int64, err error) {
 	good.Create(dto)
-	return good.Save()
+	return good.Save(ctx)
 }

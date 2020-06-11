@@ -1,6 +1,7 @@
 package accounts
 
 import (
+	"context"
 	"errors"
 	"github.com/segmentio/ksuid"
 	"github.com/shopspring/decimal"
@@ -13,6 +14,10 @@ import (
 type accountDomain struct {
 	account    Account
 	accountLog AccountLog
+}
+
+func NewAccountDomain() *accountDomain {
+	return new(accountDomain)
 }
 
 // createAccountLogNo 创建logNo
@@ -86,8 +91,17 @@ func (d *accountDomain) Create(dto services.AccountDTO) (*services.AccountDTO, e
 	return rdto, err
 }
 
-// Transfer 转账
 func (d *accountDomain) Transfer(dto services.AccountTransferDTO) (status services.TransferedStatus, err error) {
+	err = base.Tx(func(runner *dbx.TxRunner) error {
+		ctx := base.WithValueContext(context.Background(), runner)
+		status, err = d.TransferWithContextTx(ctx, dto)
+		return err
+	})
+	return
+}
+
+// Transfer 转账
+func (d *accountDomain) TransferWithContextTx(ctx context.Context, dto services.AccountTransferDTO) (status services.TransferedStatus, err error) {
 	// 创建账户流水记录
 	d.accountLog = AccountLog{}
 	d.accountLog.FromTransferDTO(&dto)
@@ -100,7 +114,7 @@ func (d *accountDomain) Transfer(dto services.AccountTransferDTO) (status servic
 	}
 	// 检查余额是否足够和更新余额：通过乐观锁来验证，更新余额的同时来验证余额是否足够
 	// 更新成功后，写入流水记录
-	err = base.Tx(func(runner *dbx.TxRunner) error {
+	err = base.ExecuteContext(ctx, func(runner *dbx.TxRunner) error {
 		accountDao := AccountDao{runner: runner}
 		accountLogDao := AccountLogDao{runner: runner}
 

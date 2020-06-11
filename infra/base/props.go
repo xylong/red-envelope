@@ -33,7 +33,7 @@ type SystemAccount struct {
 var systemAccount *SystemAccount
 var systemAccountOnce sync.Once
 
-func getSystemAccount() *SystemAccount {
+func GetSystemAccount() *SystemAccount {
 	systemAccountOnce.Do(func() {
 		systemAccount = new(SystemAccount)
 		err := kvs.Unmarshal(Props(), systemAccount, "system.account")
